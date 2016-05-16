@@ -65,13 +65,34 @@ host this yourself.
           window.close();
       }
     };
-    window.castReceiverManager.start();
+	
+	castReceiverManager.onReady = function(event) {
+          window.castReceiverManager.setApplicationState('Loop Cast ready...');
+    };
+	
+	// messages on a custom namespace
+    var ns = 'urn:x-cast:com.cast.castloopplayer';
+    window.messageBus = window.castReceiverManager.getCastMessageBus(ns);
+	
+	var video_url = "";
+	
+	window.messageBus.onMessage = function(e) {
+          var msg = JSON.parse(e.data);
+          window.messageBus.send(e.senderId, 'ok');
+		  
+		  playVideo(msg.url);
+		  
+          //if (msg.type === 'iframe') updateFrame(msg.url);
+          //if (msg.type === 'loc') updateLocation(msg.url);
+    };
+	
+    window.castReceiverManager.start({statusText: 'Loop Cast starting...'});
 
     // Use MSE with the media element.
-    window.video = document.getElementById('vid');
+    /*window.video = document.getElementById('vid');
     window.mediaSource = new MediaSource();
     window.video.src = window.URL.createObjectURL(window.mediaSource);
-    window.allSegments = null;
+    window.allSegments = null;*/
 
     /**
      * Loads the video and kicks off the processing.
@@ -82,9 +103,21 @@ host this yourself.
 
       //fileDownload('sample1.mp4');
 	  //fileDownload('http://localhost:8080/sample2.mp4');
-	  fileDownload('http://192.168.0.109:8080/sample2.mp4');
+	  fileDownload(video_url);
     });
 
+	
+	function playVideo(url) {
+        window.castReceiverManager.setApplicationState('Now Playing: ' + url);
+        video_url = url;
+		
+		    // Use MSE with the media element.
+		window.video = document.getElementById('vid');
+		window.mediaSource = new MediaSource();
+		window.video.src = window.URL.createObjectURL(window.mediaSource);
+		window.allSegments = null;
+    }
+	
     /**
      * When video data is ready, append the video source buffer.
      * @param {arrayBuffer} ArrayBuffer with video segments.
