@@ -131,11 +131,17 @@ host this yourself.
      * @param {arrayBuffer} ArrayBuffer with video segments.
      */
     function onLoad(arrayBuffer) {
-      console.log("onLoad");
+      
+	  displayText("onLoad");
+	  
       if (!arrayBuffer) {
         window.video.src = null;
+		displayText("onLoad window.video.src = null");
         return;
       }
+	  
+	  displayText("onLoad done");
+	  
       window.allSegments = new Uint8Array(arrayBuffer);
       window.sourceBuffer.appendBuffer(window.allSegments);
       processNextSegment();
