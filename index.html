@@ -48,7 +48,6 @@ host this yourself.
     <title>Looping Video Receiver</title>
   </head>
   <body>
-	<DIV id="message">Talk to me</DIV>
     <video id='vid' />
 <script type="text/javascript">
   window.onload = function() {
@@ -70,8 +69,6 @@ host this yourself.
 	
 	castReceiverManager.onReady = function(event) {
           window.castReceiverManager.setApplicationState('Loop Cast ready...');
-		  
-		  displayText("onReady");
     };
 	
 	// messages on a custom namespace
@@ -83,8 +80,6 @@ host this yourself.
 	window.messageBus.onMessage = function(e) {
           var msg = JSON.parse(e.data);
 		  
-		  //displayText(msg.data);
-		  
 		  playVideo(msg.url);
 		  
           window.messageBus.send(e.senderId, e.data);
@@ -94,19 +89,10 @@ host this yourself.
     };
 	
     window.castReceiverManager.start({statusText: 'Loop Cast starting...'});
-
-    // Use MSE with the media element.
-    /*window.video = document.getElementById('vid');
-    window.mediaSource = new MediaSource();
-    window.video.src = window.URL.createObjectURL(window.mediaSource);
-    window.allSegments = null;*/
-
 	
 	function playVideo(url) {
         window.castReceiverManager.setApplicationState('Now Playing: ' + url);
         video_url = url;
-		
-		displayText("URL: " + url);
 		
 		// Use MSE with the media element.
 		window.video = document.getElementById('vid');
@@ -118,7 +104,7 @@ host this yourself.
 		 * Loads the video and kicks off the processing.
 		 */
 		window.mediaSource.addEventListener('sourceopen', function(){
-		  window.sourceBuffer = window.mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01e"');
+		window.sourceBuffer = window.mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01e"');
 
 		  //fileDownload('sample1.mp4');
 		  //fileDownload("http://192.168.0.109:8080/sample2.mp4");
@@ -132,15 +118,10 @@ host this yourself.
      */
     function onLoad(arrayBuffer) {
       
-	  displayText("onLoad");
-	  
       if (!arrayBuffer) {
         window.video.src = null;
-		displayText("onLoad window.video.src = null");
         return;
       }
-	  
-	  displayText("onLoad done");
 	  
       window.allSegments = new Uint8Array(arrayBuffer);
       window.sourceBuffer.appendBuffer(window.allSegments);
@@ -174,8 +155,6 @@ host this yourself.
      */
     function fileDownload(url) {
 	
-		displayText("Downloading from URL: " + url);
-	
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
       xhr.responseType = 'arraybuffer';
@@ -188,16 +167,10 @@ host this yourself.
         onLoad(xhr.response);
       };
       xhr.onerror = function(e) {
-		displayText("Error: " + e);
         window.video.src = null;
       };
     };
   };
-        
-function displayText(text) {
-    document.getElementById("message").innerHTML = text;
-	window.castReceiverManager.setApplicationState(text);
-};
 </script>
   </body>
 </html>
