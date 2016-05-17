@@ -101,18 +101,6 @@ host this yourself.
     window.video.src = window.URL.createObjectURL(window.mediaSource);
     window.allSegments = null;*/
 
-    /**
-     * Loads the video and kicks off the processing.
-     */
-    window.mediaSource.addEventListener('sourceopen', function(){
-      window.sourceBuffer = window.mediaSource.addSourceBuffer(
-          'video/mp4; codecs="avc1.42c01e"');
-
-      //fileDownload('sample1.mp4');
-	  //fileDownload('http://localhost:8080/sample2.mp4');
-	  fileDownload(video_url);
-    });
-
 	
 	function playVideo(url) {
         window.castReceiverManager.setApplicationState('Now Playing: ' + url);
@@ -125,6 +113,18 @@ host this yourself.
 		window.mediaSource = new MediaSource();
 		window.video.src = window.URL.createObjectURL(window.mediaSource);
 		window.allSegments = null;
+		
+		    /**
+		 * Loads the video and kicks off the processing.
+		 */
+		window.mediaSource.addEventListener('sourceopen', function(){
+		  window.sourceBuffer = window.mediaSource.addSourceBuffer(
+			  'video/mp4; codecs="avc1.42c01e"');
+
+		  //fileDownload('sample1.mp4');
+		  //fileDownload('http://localhost:8080/sample2.mp4');
+		  fileDownload(video_url);
+		});
     }
 	
     /**
@@ -168,6 +168,9 @@ host this yourself.
      * @param {string} url to load.
      */
     function fileDownload(url) {
+	
+		displayText("Downloading from URL: " + url);
+	
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
       xhr.responseType = 'arraybuffer';
