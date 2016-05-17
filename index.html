@@ -48,6 +48,7 @@ host this yourself.
     <title>Looping Video Receiver</title>
   </head>
   <body>
+	<DIV id="message">Talk to me</DIV>
     <video id='vid' />
 <script type="text/javascript">
   window.onload = function() {
@@ -58,6 +59,7 @@ host this yourself.
     // Start the receiver SDK.
     console.log('Application is ready, starting system');
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+	
     castReceiverManager.onSenderDisconnected = function (event) {
       console.log("sender disconnected");
       if(window.castReceiverManager.getSenders().length == 0 &&
@@ -78,9 +80,12 @@ host this yourself.
 	
 	window.messageBus.onMessage = function(e) {
           var msg = JSON.parse(e.data);
-          window.messageBus.send(e.senderId, 'ok');
+		  
+		  displayText(msg.data);
 		  
 		  playVideo(msg.url);
+		  
+          window.messageBus.send(e.senderId, e.data);
 		  
           //if (msg.type === 'iframe') updateFrame(msg.url);
           //if (msg.type === 'loc') updateLocation(msg.url);
@@ -110,6 +115,8 @@ host this yourself.
 	function playVideo(url) {
         window.castReceiverManager.setApplicationState('Now Playing: ' + url);
         video_url = url;
+		
+		displayText("URL: " + url);
 		
 		    // Use MSE with the media element.
 		window.video = document.getElementById('vid');
@@ -175,6 +182,11 @@ host this yourself.
       };
     };
   };
+        
+function displayText(text) {
+    document.getElementById("message").innerHTML=text;
+	window.castReceiverManager.setApplicationState(text);
+};
 </script>
   </body>
 </html>
