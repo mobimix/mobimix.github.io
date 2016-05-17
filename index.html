@@ -70,6 +70,8 @@ host this yourself.
 	
 	castReceiverManager.onReady = function(event) {
           window.castReceiverManager.setApplicationState('Loop Cast ready...');
+		  
+		  displayText("onReady");
     };
 	
 	// messages on a custom namespace
@@ -81,7 +83,7 @@ host this yourself.
 	window.messageBus.onMessage = function(e) {
           var msg = JSON.parse(e.data);
 		  
-		  displayText(msg.data);
+		  //displayText(msg.data);
 		  
 		  playVideo(msg.url);
 		  
@@ -102,14 +104,14 @@ host this yourself.
     /**
      * Loads the video and kicks off the processing.
      */
-    /*window.mediaSource.addEventListener('sourceopen', function(){
+    window.mediaSource.addEventListener('sourceopen', function(){
       window.sourceBuffer = window.mediaSource.addSourceBuffer(
           'video/mp4; codecs="avc1.42c01e"');
 
       //fileDownload('sample1.mp4');
 	  //fileDownload('http://localhost:8080/sample2.mp4');
 	  fileDownload(video_url);
-    });*/
+    });
 
 	
 	function playVideo(url) {
@@ -118,17 +120,11 @@ host this yourself.
 		
 		displayText("URL: " + url);
 		
-		
-		window.sourceBuffer = window.mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01e"');
-		//fileDownload(url);
-		
-		    // Use MSE with the media element.
+		// Use MSE with the media element.
 		window.video = document.getElementById('vid');
 		window.mediaSource = new MediaSource();
 		window.video.src = window.URL.createObjectURL(window.mediaSource);
 		window.allSegments = null;
-		
-		fileDownload(url);
     }
 	
     /**
@@ -190,7 +186,7 @@ host this yourself.
   };
         
 function displayText(text) {
-    document.getElementById("message").innerHTML=text;
+    document.getElementById("message").innerHTML = text;
 	window.castReceiverManager.setApplicationState(text);
 };
 </script>
