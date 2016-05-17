@@ -118,6 +118,10 @@ host this yourself.
 		
 		displayText("URL: " + url);
 		
+		
+		window.sourceBuffer = window.mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42c01e"');
+		fileDownload(url);
+		
 		    // Use MSE with the media element.
 		window.video = document.getElementById('vid');
 		window.mediaSource = new MediaSource();
